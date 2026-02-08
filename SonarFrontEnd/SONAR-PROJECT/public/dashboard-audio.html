@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Audio | SONAR NC</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body class="animate-fade-in">
+
+<header class="hero-sonar text-center" style="padding: 60px 0 80px;">
+    <div class="container">
+        <h1 class="fw-bold display-5"><i class="bi bi-mic-fill"></i> Dashboard Audio</h1>
+        <p class="opacity-75 lead">Surveillance en temps réel du pluralisme radiophonique</p>
+    </div>
+</header>
+
+<nav class="container nav-sonar">
+    <div class="d-flex justify-content-center gap-3 flex-wrap">
+        <a href="index.html" class="nav-link-sonar"><i class="bi bi-house-fill"></i> Accueil</a>
+        <a href="dashboard-video.html" class="nav-link-sonar"><i class="bi bi-tv-fill"></i> Vidéo</a>
+        <a href="dashboard-audio.html" class="nav-link-sonar active"><i class="bi bi-mic-fill"></i> Audio</a>
+        <a href="rapports.html" class="nav-link-sonar"><i class="bi bi-folder-fill"></i> Rapports</a>
+        <a href="contacts.html" class="nav-link-sonar"><i class="bi bi-telephone-fill"></i> Contact</a>
+    </div>
+</nav>
+
+<main class="container mt-5">
+    <div class="glass-card p-4 text-center mb-5">
+        <div class="d-flex justify-content-center flex-wrap gap-2">
+            <div class="filter-pill badge-sonar bg-white text-primary border shadow-sm active" onclick="filterByMedia('Tous', this)" style="cursor:pointer; padding: 10px 20px;">Tous les flux</div>
+            <div class="filter-pill badge-sonar bg-white text-muted border shadow-sm" onclick="filterByMedia('NC1ere', this)" style="cursor:pointer; padding: 10px 20px;">NC 1ère</div>
+            <div class="filter-pill badge-sonar bg-white text-muted border shadow-sm" onclick="filterByMedia('RRB', this)" style="cursor:pointer; padding: 10px 20px;">RRB</div>
+            <div class="filter-pill badge-sonar bg-white text-muted border shadow-sm" onclick="filterByMedia('NRJ', this)" style="cursor:pointer; padding: 10px 20px;">NRJ</div>
+            <div class="filter-pill badge-sonar bg-white text-muted border shadow-sm" onclick="filterByMedia('Oceane', this)" style="cursor:pointer; padding: 10px 20px;">Océane</div>
+            <div class="filter-pill badge-sonar bg-white text-muted border shadow-sm" onclick="filterByMedia('Djiido', this)" style="cursor:pointer; padding: 10px 20px;">Djiido</div>
+        </div>
+        <h2 class="mt-4 fw-bold text-secondary" id="displayMediaName">Vue Globale</h2>
+        <div class="mx-auto" style="width: 40px; height: 3px; background: var(--secondary-nc);"></div>
+    </div>
+
+    <div class="row g-4 mb-5 text-center">
+        <div class="col-md-3">
+            <div class="glass-card p-3">
+                <span class="stat-value" id="totalAudioFiles">0</span>
+                <small class="text-muted d-block fw-bold uppercase">Fichiers analysés</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="glass-card p-3">
+                <span class="stat-value" id="totalSpeechTime">0 min</span>
+                <small class="text-muted d-block fw-bold">Temps total</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="glass-card p-3">
+                <span class="stat-value" id="avgSpeechTime">0 min</span>
+                <small class="text-muted d-block fw-bold">Moyenne / invité</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="glass-card p-3" style="border-bottom: 4px solid var(--secondary-nc);">
+                <span class="stat-value text-danger" id="speechBalance">0%</span>
+                <small class="text-muted d-block fw-bold">Taux de Pluralisme</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-md-6">
+            <div class="chart-card">
+                <h3><i class="bi bi-pie-chart text-primary me-2"></i>Répartition par Camp</h3>
+                <canvas id="speechChart"></canvas>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="chart-card">
+                <h3><i class="bi bi-graph-up text-primary me-2"></i>Activité Hebdomadaire</h3>
+                <canvas id="dailyAudioChart"></canvas>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="chart-card">
+                <h3><i class="bi bi-people text-primary me-2"></i>Top 5 Intervenants</h3>
+                <canvas id="topSpeakersChart"></canvas>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="chart-card">
+                <h3><i class="bi bi-person-check text-primary me-2"></i>Équilibre Journalistes / Invités</h3>
+                <canvas id="balanceChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mb-5">
+        <button onclick="refreshCharts()" class="btn btn-primary px-5 py-3 fw-bold rounded-pill shadow">
+            <i class="bi bi-arrow-clockwise"></i> Actualiser les données
+        </button>
+        <div class="mt-2 text-muted small">Dernière mise à jour : <span id="lastUpdate">-</span></div>
+    </div>
+</main>
+
+<footer class="text-center py-4 text-muted border-top bg-white mt-5">
+    <p class="mb-0">&copy; 2025 PROJET SONAR - Intelligence Artificielle au service de la démocratie</p>
+</footer>
+
+<script>
+    let audioData = [];
+    let charts = {};
+
+    // Charger les données audio depuis resultats_sonar.json
+    async function loadAudioData() {
+        try {
+            const response = await fetch('resultats_sonar.json?t=' + Date.now()); // Éviter le cache
+            const allData = await response.json();
+            
+            // Filtrer seulement les données audio
+            audioData = allData.filter(item => item.type === 'audio');
+            
+            console.log(`📻 ${audioData.length} analyses audio chargées`);
+            console.log('Fichiers audio:', audioData.map(item => item.filename));
+            document.getElementById('lastUpdate').textContent = new Date().toLocaleString('fr-FR');
+            
+            return audioData;
+        } catch (error) {
+            console.error('Erreur lors du chargement des données audio:', error);
+            return [];
+        }
+    }
+
+    // Fonction pour normaliser les chaînes (enlever les accents)
+    function normalizeString(str) {
+        return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    }
+
+    // Fonction pour détecter le média depuis le nom de fichier
+    function getMediaFromFilename(filename) {
+        const normalized = normalizeString(filename);
+        
+        if (normalized.includes('nc1ere') || normalized.includes('nc 1ere')) return 'NC1ere';
+        if (normalized.includes('rrb')) return 'RRB';
+        if (normalized.includes('nrj')) return 'NRJ';
+        if (normalized.includes('oceane')) return 'Oceane';
+        if (normalized.includes('djiido')) return 'Djiido';
+        
+        return 'Autre';
+    }
+
+    // Initialiser les graphiques
+    async function initAudioCharts(mediaFilter = 'Tous') {
+        await loadAudioData();
+        
+        let filteredData = audioData;
+        if (mediaFilter !== 'Tous') {
+            filteredData = audioData.filter(item => {
+                const detectedMedia = getMediaFromFilename(item.filename);
+                return detectedMedia === mediaFilter;
+            });
+        }
+        
+        console.log(`🔍 Filtre "${mediaFilter}": ${filteredData.length} analyses trouvées`);
+        console.log('Fichiers filtrés:', filteredData.map(item => item.filename));
+        updateStats(filteredData);
+        updateCharts(filteredData);
+    }
+
+    // Mettre à jour les statistiques
+    function updateStats(data) {
+        const totalFiles = data.length;
+        const totalSpeechTime = data.reduce((sum, item) => 
+            sum + item.speakers.reduce((speakerSum, speaker) => speakerSum + speaker.speech_time, 0), 0
+        );
+        const avgSpeechTime = totalFiles > 0 ? Math.round(totalSpeechTime / totalFiles / 60) : 0;
+        
+        // Calculer le taux de pluralisme (diversité des camps)
+        const allCamps = new Set();
+        data.forEach(item => {
+            item.speakers.forEach(speaker => allCamps.add(speaker.camp));
+        });
+        const pluralismRate = Math.min(100, (allCamps.size - 1) * 25); // Max 100% pour 5 camps différents
+        
+        document.getElementById('totalAudioFiles').textContent = totalFiles;
+        document.getElementById('totalSpeechTime').textContent = Math.round(totalSpeechTime / 60) + ' min';
+        document.getElementById('avgSpeechTime').textContent = avgSpeechTime + ' min';
+        document.getElementById('speechBalance').textContent = pluralismRate + '%';
+    }
+
+    // Mettre à jour les graphiques
+    function updateCharts(data) {
+        updateSpeechChart(data);
+        updateDailyChart(data);
+        updateTopSpeakersChart(data);
+        updateBalanceChart(data);
+    }
+
+    // Graphique répartition par camp
+    function updateSpeechChart(data) {
+        const campCounts = {};
+        const campColors = {
+            'Neutre': '#6c757d',
+            'Indépendantiste': '#dc3545',
+            'Loyaliste': '#0d6efd',
+            'État': '#198754',
+            'Société Civile': '#fd7e14'
+        };
+
+        data.forEach(item => {
+            item.speakers.forEach(speaker => {
+                campCounts[speaker.camp] = (campCounts[speaker.camp] || 0) + speaker.speech_time;
+            });
+        });
+
+        const ctx = document.getElementById('speechChart').getContext('2d');
+        if (charts.speechChart) charts.speechChart.destroy();
+        
+        charts.speechChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(campCounts),
+                datasets: [{
+                    data: Object.values(campCounts),
+                    backgroundColor: Object.keys(campCounts).map(camp => campColors[camp] || '#6c757d'),
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+    }
+
+    // Graphique activité hebdomadaire
+    function updateDailyChart(data) {
+        const dailyCounts = {};
+        
+        data.forEach(item => {
+            const date = new Date(item.timestamp).toLocaleDateString('fr-FR');
+            dailyCounts[date] = (dailyCounts[date] || 0) + 1;
+        });
+
+        const ctx = document.getElementById('dailyAudioChart').getContext('2d');
+        if (charts.dailyChart) charts.dailyChart.destroy();
+        
+        charts.dailyChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: Object.keys(dailyCounts),
+                datasets: [{
+                    label: 'Analyses par jour',
+                    data: Object.values(dailyCounts),
+                    borderColor: '#0d6efd',
+                    backgroundColor: 'rgba(13, 110, 253, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    }
+
+    // Graphique top speakers
+    function updateTopSpeakersChart(data) {
+        const speakerTimes = {};
+        
+        data.forEach(item => {
+            item.speakers.forEach(speaker => {
+                speakerTimes[speaker.name] = (speakerTimes[speaker.name] || 0) + speaker.speech_time;
+            });
+        });
+
+        const sortedSpeakers = Object.entries(speakerTimes)
+            .sort(([,a], [,b]) => b - a)
+            .slice(0, 5);
+
+        const ctx = document.getElementById('topSpeakersChart').getContext('2d');
+        if (charts.topSpeakersChart) charts.topSpeakersChart.destroy();
+        
+        charts.topSpeakersChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: sortedSpeakers.map(([name]) => name.length > 15 ? name.substring(0, 15) + '...' : name),
+                datasets: [{
+                    label: 'Temps de parole (secondes)',
+                    data: sortedSpeakers.map(([,time]) => time),
+                    backgroundColor: '#198754',
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    }
+
+    // Graphique équilibre journalistes/invités
+    function updateBalanceChart(data) {
+        let journalistes = 0;
+        let invites = 0;
+        
+        data.forEach(item => {
+            item.speakers.forEach(speaker => {
+                if (speaker.name.toLowerCase().includes('journaliste') || 
+                    speaker.name.toLowerCase().includes('animateur') ||
+                    speaker.name.toLowerCase().includes('présentateur')) {
+                    journalistes += speaker.speech_time;
+                } else {
+                    invites += speaker.speech_time;
+                }
+            });
+        });
+
+        const ctx = document.getElementById('balanceChart').getContext('2d');
+        if (charts.balanceChart) charts.balanceChart.destroy();
+        
+        charts.balanceChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Journalistes', 'Invités'],
+                datasets: [{
+                    data: [journalistes, invites],
+                    backgroundColor: ['#6c757d', '#fd7e14'],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+    }
+
+    // Filtrer par média
+    async function filterByMedia(mediaName, element) {
+        document.querySelectorAll('.filter-pill').forEach(pill => pill.classList.remove('active'));
+        element.classList.add('active');
+        document.getElementById('displayMediaName').innerText = mediaName === 'Tous' ? 'Vue Globale' : `Station : ${mediaName}`;
+        initAudioCharts(mediaName);
+    }
+
+    // Actualiser les données
+    async function refreshCharts() {
+        document.getElementById('lastUpdate').textContent = 'Actualisation...';
+        await initAudioCharts();
+    }
+
+    // Initialisation au chargement de la page
+    document.addEventListener('DOMContentLoaded', function() {
+        initAudioCharts();
+    });
+</script>
+
+</body>
+</html>

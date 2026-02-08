@@ -1,0 +1,108 @@
+[
+  {
+    "id": 1767561765600,
+    "titre": "Journal Télévisé NC 1ère - 04/01/2026",
+    "introduction": "Analyse du journal télévisé de NC 1ère diffusé le 4 janvier 2026. En tant qu'expert **SONAR**, voici mon analyse détaillée de ce journal télévisé de Nouvelle-Calédonie (édition du dimanche 4 janvier 2026)....",
+    "verdict_ia": "Couverture équilibrée avec une forte présence journalistique neutre. Respect des standards de pluralisme.",
+    "analyse_pluralisme": [
+      "Présence de journalistes neutres assurant la modération",
+      "Couverture diversifiée de l'actualité",
+      "Respect des standards journalistiques",
+      "Équilibre dans le traitement des sujets"
+    ],
+    "faits_marquants": [
+      "Couverture des enjeux politiques locaux",
+      "Analyse des questions économiques du territoire",
+      "Traitement des questions institutionnelles",
+      "Couverture des actualités sportives",
+      "Information sur les questions de sécurité"
+    ],
+    "media": "NC la 1ère"
+  },
+  {
+    "id": 1767673514235,
+    "titre": "Journal Radio - 06/01/2026",
+    "introduction": "Analyse du contenu radio diffusé le 06/01/2026. Cet extrait radio calédonien présente un pluralisme politique notable, couvrant des enjeux locaux, nationaux et internationaux, et impliquant une variété d'acteurs.......",
+    "verdict_ia": "Représentation pluraliste avec diversité des camps politiques représentés. Équilibre respecté.",
+    "analyse_pluralisme": [
+      "Présence de journalistes neutres assurant la modération",
+      "Expertise de la société civile et des spécialistes"
+    ],
+    "faits_marquants": [
+      "Couverture des enjeux politiques locaux",
+      "Analyse des questions économiques du territoire",
+      "Traitement des questions sociales",
+      "Couverture du thème: Culture",
+      "Information sur les questions de santé publique",
+      "Couverture du thème: Environnement"
+    ],
+    "media": "Média Divers"
+  },
+  {
+    "id": 1767673585293,
+    "titre": "Journal Télévisé - 06/01/2026",
+    "introduction": "Analyse du contenu télévisé diffusé le 06/01/2026. En tant qu'expert SONAR, voici l'analyse politique et le résumé des temps forts du journal télévisé de Nouvelle-Calédonie (Édition du 05 janvier 2026).......",
+    "verdict_ia": "Couverture équilibrée avec une forte présence journalistique neutre. Respect des standards de pluralisme.",
+    "analyse_pluralisme": [
+      "Présence de journalistes neutres assurant la modération"
+    ],
+    "faits_marquants": [
+      "Couverture des enjeux politiques locaux",
+      "Analyse des questions économiques du territoire",
+      "Couverture des actualités sportives",
+      "Traitement des questions sociales",
+      "Couverture du thème: Sécurité"
+    ],
+    "media": "Média Divers"
+  },
+  {
+    "id": 1767674574040,
+    "titre": "Journal Radio - 06/01/2026",
+    "introduction": "Analyse du contenu radio diffusé le 06/01/2026. Cet extrait radio calédonien offre un aperçu intéressant du pluralisme politique à plusieurs niveaux : local, provincial et dans ses relations avec la France métropolitaine.......",
+    "verdict_ia": "Représentation pluraliste avec diversité des camps politiques représentés. Équilibre respecté.",
+    "analyse_pluralisme": [
+      "Présence de journalistes neutres assurant la modération",
+      "Représentation équilibrée des camps indépendantiste et loyaliste"
+    ],
+    "faits_marquants": [
+      "Couverture des enjeux politiques locaux"
+    ],
+    "media": "Média Divers"
+  },
+  {
+    "id": 1767674574051,
+    "titre": "Journal Radio - 06/01/2026",
+    "introduction": "Analyse du contenu radio diffusé le 06/01/2026. Cet extrait radio calédonien de \"L'Actu Express\" de Nouméa Post présente une analyse économique et politique avec une tendance éditoriale clairement identifiable, tout en rapportant des faits qui témo...",
+    "verdict_ia": "Représentation pluraliste avec diversité des camps politiques représentés. Équilibre respecté.",
+    "analyse_pluralisme": [
+      "Présence de journalistes neutres assurant la modération",
+      "Représentation équilibrée des camps indépendantiste et loyaliste"
+    ],
+    "faits_marquants": [
+      "Couverture des enjeux politiques locaux",
+      "Analyse des questions économiques du territoire",
+      "Traitement des questions sociales",
+      "Couverture du thème: Débat",
+      "Couverture du thème: Culture",
+      "Couverture des actualités sportives",
+      "Couverture du thème: Environnement"
+    ],
+    "media": "Océane FM"
+  },
+  {
+    "id": 1767674574055,
+    "titre": "Journal Radio - 06/01/2026",
+    "introduction": "Analyse du contenu radio diffusé le 06/01/2026. Cet extrait radiophonique calédonien offre une illustration riche et multiple du pluralisme politique, se manifestant à travers divers niveaux de gouvernance, acteurs et thématiques.......",
+    "verdict_ia": "Couverture équilibrée avec une forte présence journalistique neutre. Respect des standards de pluralisme.",
+    "analyse_pluralisme": [
+      "Présence de journalistes neutres assurant la modération"
+    ],
+    "faits_marquants": [
+      "Couverture des enjeux politiques locaux",
+      "Analyse des questions économiques du territoire",
+      "Traitement des questions sociales",
+      "Couverture du thème: Débat"
+    ],
+    "media": "Média Divers"
+  }
+]

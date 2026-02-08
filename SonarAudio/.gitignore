@@ -1,0 +1,12 @@
+node_modules/
+.env
+.vscode/
+.idea/
+*.mp4
+*.wav
+recordings/
+uploads_video/
+processed_data/
+depot_audio/processed/
+ffmpeg.exe
+.DS_Store

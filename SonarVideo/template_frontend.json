@@ -1,0 +1,27 @@
+{
+  "id": 1770105030488,
+  "type": "video",
+  "filename": "CALEDONIA_JT_DU_02-02-2026.mp4",
+  "timestamp": "2026-02-03T07:50:30.488Z",
+  "duration": 0,
+  "speakers": [
+    {
+      "name": "Journaliste Principal",
+      "camp": "Neutre",
+      "speech_time": 400
+    },
+    {
+      "name": "Journaliste Terrain",
+      "camp": "Neutre",
+      "speech_time": 200
+    }
+  ],
+  "topics": [
+    "Politique",
+    "Économie",
+    "Santé",
+    "Social"
+  ],
+  "summary": "En tant qu'expert SONAR, voici mon analyse détaillée du journal télévisé de **Caledonia TV** du 2 février 2024 (bien que la vidéo porte un titre prospectif de 2026, les événements traitent de l'actual...",
+  "analysis_complete": true
+}

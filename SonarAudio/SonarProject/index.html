@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Agent SONAR - Régulation Médias NC</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        sonar: { 50: '#f0fdfa', 100: '#ccfbf1', 200: '#99f6e4', 300: '#5eead4', 400: '#2dd4bf', 500: '#14b8a6', 600: '#0d9488', 700: '#0f766e', 800: '#115e59', 900: '#134e4a', 950: '#042f2e' },
+                        alert: { 500: '#ef4444', 600: '#dc2626' }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen font-sans">
+    <header class="border-b border-sonar-800 bg-slate-900/50 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-sonar-500 rounded-lg flex items-center justify-center shadow-lg shadow-sonar-500/20">
+                    <span class="text-2xl">🛰️</span>
+                </div>
+                <div>
+                    <h1 class="font-bold text-xl tracking-tight text-white">AGENT <span class="text-sonar-400">SONAR</span></h1>
+                    <p class="text-[10px] text-sonar-400 uppercase tracking-[0.2em] font-bold">Régulation Médias Nouvelle-Calédonie</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <span class="flex items-center gap-2 text-xs font-mono bg-slate-800 px-3 py-1 rounded-full border border-slate-700">
+                    <span class="w-2 h-2 bg-sonar-400 rounded-full animate-pulse"></span>
+                    SYSTÈME ACTIF
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <div class="flex justify-center mb-10">
+            <button onclick="lancerScan()" class="group relative px-8 py-4 bg-sonar-600 hover:bg-sonar-500 text-white font-bold rounded-xl transition-all shadow-xl shadow-sonar-900/40 hover:-translate-y-1">
+                🚀 LANCER UN SCAN SPECTRAL (30s)
+                <div class="absolute -inset-1 bg-sonar-400 rounded-xl blur opacity-20 group-hover:opacity-40 transition-opacity"></div>
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            <div class="bg-slate-800/50 border border-slate-700 p-6 rounded-2xl shadow-xl">
+                <h3 class="text-sonar-300 font-bold mb-4 flex items-center gap-2">
+                    📊 Répartition des Thématiques
+                </h3>
+                <canvas id="topicsChart" class="max-h-[300px]"></canvas>
+            </div>
+
+            <div class="bg-slate-800/50 border border-slate-700 p-6 rounded-2xl shadow-xl">
+                <h3 class="text-sonar-300 font-bold mb-4 flex items-center gap-2">
+                    🕸️ Équilibre des Forces (Pluralisme)
+                </h3>
+                <canvas id="actorsChart" class="max-h-[300px]"></canvas>
+            </div>
+
+            <div class="lg:col-span-2 bg-slate-950 border border-sonar-900/50 p-6 rounded-2xl shadow-inner">
+                <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-2">
+                    <h3 class="text-sonar-400 font-mono text-sm uppercase tracking-widest">Flux d'Analyse IA Gemini</h3>
+                    <span id="timestamp" class="text-[10px] text-slate-500 font-mono">EN ATTENTE DE DONNÉES...</span>
+                </div>
+                <div id="logs" class="font-mono text-sm text-slate-300 leading-relaxed whitespace-pre-wrap max-h-[500px] overflow-y-auto">
+                    Prêt pour l'analyse des médias calédoniens. 
+                    En attente d'un flux audio pour commencer le décryptage du pluralisme...
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Initialisation des graphiques avec TES données réelles [cite: 3, 5, 6, 25]
+        const ctxTopics = document.getElementById('topicsChart').getContext('2d');
+        const topicsChart = new Chart(ctxTopics, {
+            type: 'bar',
+            data: {
+                labels: ['Économie/Budget', 'Gouvernance', 'Services Publics', 'Santé', 'Sport', 'Culture'],
+                datasets: [{
+                    label: 'Occurrences détectées',
+                    data: [25, 18, 15, 10, 22, 12],
+                    backgroundColor: '#14b8a6',
+                    borderRadius: 5
+                }]
+            },
+            options: { 
+                responsive: true,
+                scales: { y: { beginAtZero: true, grid: { color: '#1e293b' } } }
+            }
+        });
+
+        const ctxActors = document.getElementById('actorsChart').getContext('2d');
+        const actorsChart = new Chart(ctxActors, {
+            type: 'radar',
+            data: {
+                labels: ['Loyalistes', 'Indépendantistes', 'Gouvernement', 'État', 'Société Civile', 'Experts'],
+                datasets: [{
+                    label: 'Temps de parole / Mentions (%)',
+                    data: [85, 45, 90, 60, 75, 55],
+                    backgroundColor: 'rgba(20, 184, 166, 0.2)',
+                    borderColor: '#2dd4bf',
+                    pointBackgroundColor: '#2dd4bf'
+                }]
+            },
+            options: {
+                scales: { r: { grid: { color: '#334155' }, angleLines: { color: '#334155' }, ticks: { display: false } } }
+            }
+        });
+
+        async function lancerScan() {
+            const logs = document.getElementById('logs');
+            logs.innerHTML = "🛰️ <span class='text-sonar-400 animate-pulse'>INITIALISATION CAPTURE DIRECT...</span>\nUtilisation de FFmpeg pour capturer 30 secondes de flux.";
+            try {
+                const response = await fetch('/api/trigger-scan', { method: 'POST' });
+                const result = await response.json();
+                logs.innerHTML += `\n✅ ${result.message}`;
+            } catch (e) {
+                logs.innerHTML += "\n❌ Erreur de connexion au serveur.";
+            }
+        }
+
+        async function rafraichirDonnees() {
+            try {
+                const response = await fetch('/api/data');
+                const data = await response.json();
+                if (data.length > 0) {
+                    const last = data[data.length - 1];
+                    document.getElementById('timestamp').innerText = `SOURCE : ${last.source}`;
+                    // Mise en évidence des mots clés (gras)
+                    const formatted = last.analyse.replace(/\*\*(.*?)\*\*/g, '<b class="text-sonar-300 font-bold">$1</b>');
+                    document.getElementById('logs').innerHTML = formatted;
+                }
+            } catch (e) { console.log("Maj..."); }
+        }
+        setInterval(rafraichirDonnees, 5000);
+    </script>
+</body>
+</html>

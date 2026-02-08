@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archives & Rapports | SONAR NC</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body class="animate-fade-in">
+
+<header class="hero-sonar text-center" style="background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%); padding: 60px 0 80px;">
+    <div class="container">
+        <span class="badge badge-sonar bg-warning text-dark mb-3">ARCHIVES OFFICIELLES</span>
+        <h1 class="display-5 fw-bold"><i class="bi bi-folder2-open"></i> Rapports de Surveillance</h1>
+        <p class="lead opacity-75">Historique des analyses et verdicts de conformité</p>
+    </div>
+</header>
+
+<nav class="container nav-sonar">
+    <div class="d-flex justify-content-center gap-3 flex-wrap">
+        <a href="index.html" class="nav-link-sonar"><i class="bi bi-house-fill"></i> Accueil</a>
+        <a href="dashboard-video.html" class="nav-link-sonar"><i class="bi bi-tv-fill"></i> Vidéo</a>
+        <a href="dashboard-audio.html" class="nav-link-sonar"><i class="bi bi-mic-fill"></i> Audio</a>
+        <a href="rapports.html" class="nav-link-sonar active" style="background: #2c3e50;"><i class="bi bi-folder-check"></i> Rapports</a>
+        <a href="contacts.html" class="nav-link-sonar"><i class="bi bi-telephone-fill"></i> Contact</a>
+    </div>
+</nav>
+
+<main class="container mt-5">
+    <div class="glass-card p-4 mb-4">
+        <div class="row g-3 align-items-center">
+            <div class="col-md-auto">
+                <span class="fw-bold text-muted"><i class="bi bi-filter"></i> FILTRER :</span>
+            </div>
+            <div class="col-md-3">
+                <select class="form-select border-0 bg-light shadow-sm" id="filterType" style="border-radius: 10px;">
+                    <option value="tous">Toutes les catégories</option>
+                    <option value="Video">Vidéo (TV)</option>
+                    <option value="Audio">Audio (Radio)</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select class="form-select border-0 bg-light shadow-sm" id="filterMedia" style="border-radius: 10px;">
+                    <option value="tous">Tous les médias</option>
+                    <optgroup label="Télévision">
+                        <option value="NC 1ere">NC 1ère</option>
+                        <option value="Caledonia">Caledonia</option>
+                    </optgroup>
+                    <optgroup label="Radio">
+                        <option value="NC1ere">NC 1ère Radio</option>
+                        <option value="RRB">RRB</option>
+                        <option value="NRJ">NRJ</option>
+                        <option value="Oceane">Océane FM</option>
+                        <option value="Djiido">Radio Djiido</option>
+                    </optgroup>
+                </select>
+            </div>
+            <div class="col-md text-end">
+                <span class="badge badge-sonar bg-light text-muted" id="rowCount">Chargement des archives...</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="report-table-card shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Média</th>
+                        <th>Titre du Rapport</th>
+                        <th>Verdict IA</th>
+                        <th class="text-center">Dossier</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+<div class="modal fade" id="rapportModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header px-4">
+                <h5 class="modal-title fw-bold" id="rapportModalLabel">Détails du Rapport</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4" id="modalContent">
+                </div>
+            <div class="modal-footer border-0 px-4 pb-4">
+                <button type="button" class="btn btn-light fw-bold px-4" data-bs-dismiss="modal">Fermer</button>
+                <button type="button" class="btn btn-primary fw-bold px-4" onclick="window.print()"><i class="bi bi-printer"></i> Imprimer PDF</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="text-center py-4 text-muted mt-5">
+    <small>&copy; 2025 SONAR NC - Base de données juridique et médiatique</small>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // --- LOGIQUE JS IDENTIQUE MAIS AVEC DESIGN AMÉLIORÉ ---
+    
+    document.addEventListener('DOMContentLoaded', fetchRapports);
+    document.getElementById('filterType').addEventListener('change', applyFilters);
+    document.getElementById('filterMedia').addEventListener('change', applyFilters);
+
+    async function fetchRapports() {
+        try {
+            const response = await fetch('resultats_sonar.json');
+            const data = await response.json();
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = '';
+
+            data.sort((a,b) => b.timestamp - a.timestamp).forEach(item => {
+                const date = new Date(item.timestamp).toLocaleDateString('fr-FR');
+                const cat = item.type.charAt(0).toUpperCase() + item.type.slice(1);
+                const media = getMedia(item);
+                const verdict = item.analysis_complete ? 
+                    '<span class="status-pill status-ok"><i class="bi bi-check-circle"></i> Conforme</span>' : 
+                    '<span class="status-pill status-alert"><i class="bi bi-exclamation-triangle"></i> Litige potentiel</span>';
+
+                const row = `
+                    <tr>
+                        <td class="fw-bold text-muted">${date}</td>
+                        <td><span class="badge ${item.type==='video'?'badge-video':'badge-audio'}">${cat}</span></td>
+                        <td><span class="fw-bold" style="color:var(--blue-nc)">${media}</span></td>
+                        <td><span class="text-dark">${item.summary || 'Analyse automatique du flux'}</span></td>
+                        <td>${verdict}</td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-dark rounded-pill px-3" onclick="showDetail(${item.id})">
+                                <i class="bi bi-eye"></i> Ouvrir
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            });
+            updateCount();
+        } catch (e) { console.error(e); }
+    }
+
+    // Réutilisation de tes fonctions existantes avec légères corrections
+    function getMedia(item) {
+        const f = item.filename.toLowerCase();
+        if (item.type === 'video') return (f.includes('nc1ere') || f.includes('jt')) ? 'NC 1ère TV' : 'Caledonia';
+        return f.includes('interview') ? 'NC 1ère Radio' : 'RRB';
+    }
+
+    async function showDetail(id) {
+        const modal = new bootstrap.Modal(document.getElementById('rapportModal'));
+        const container = document.getElementById('modalContent');
+        modal.show();
+
+        try {
+            const [detailsRes, resultsRes] = await Promise.all([
+                fetch('rapports_details.json'),
+                fetch('resultats_sonar.json')
+            ]);
+            const details = await detailsRes.json();
+            const results = await resultsRes.json();
+            
+            const rapport = details.find(d => d.id === id);
+            const basic = results.find(r => r.id === id);
+
+            container.innerHTML = `
+                <div class="report-detail-box d-flex justify-content-between align-items-center">
+                    <div>
+                        <small class="text-muted fw-bold">SOURCE</small><br>
+                        <span class="fw-bold text-primary">${getMedia(basic)}</span>
+                    </div>
+                    <div class="text-end">
+                        <small class="text-muted fw-bold">DATE D'ANALYSE</small><br>
+                        <span class="fw-bold">${new Date(basic.timestamp).toLocaleDateString('fr-FR')}</span>
+                    </div>
+                </div>
+                <h4 class="fw-bold mb-3">${rapport.titre}</h4>
+                <p class="text-muted mb-4">${rapport.introduction}</p>
+                
+                <div class="card border-0 bg-light p-3 mb-4">
+                    <h6 class="fw-bold text-primary"><i class="bi bi-robot"></i> SYNTHÈSE IA SONAR</h6>
+                    <p class="mb-0 small">${rapport.verdict_ia}</p>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <h6 class="fw-bold"><i class="bi bi-graph-up-arrow"></i> PLURALISME</h6>
+                        <ul class="small ps-3">
+                            ${rapport.analyse_pluralisme.map(li => `<li class="mb-1">${li}</li>`).join('')}
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="fw-bold"><i class="bi bi-lightning-charge"></i> POINTS CLÉS</h6>
+                        <ul class="small ps-3">
+                            ${rapport.faits_marquants.map(li => `<li class="mb-1">${li}</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
+            `;
+        } catch(e) { container.innerHTML = "Erreur de chargement."; }
+    }
+
+    function applyFilters() {
+        const type = document.getElementById('filterType').value;
+        const media = document.getElementById('filterMedia').value;
+        const rows = document.querySelectorAll('#tableBody tr');
+        rows.forEach(row => {
+            const tMatch = type === 'tous' || row.cells[1].innerText.includes(type);
+            const mMatch = media === 'tous' || row.cells[2].innerText.includes(media);
+            row.style.display = (tMatch && mMatch) ? '' : 'none';
+        });
+        updateCount();
+    }
+
+    function updateCount() {
+        const visible = document.querySelectorAll('#tableBody tr[style=""]').length || document.querySelectorAll('#tableBody tr').length;
+        document.getElementById('rowCount').innerText = `${visible} rapport(s) archivé(s)`;
+    }
+</script>
+</body>
+</html>

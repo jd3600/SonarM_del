@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Vidéo | SONAR NC</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body class="animate-fade-in">
+
+<header class="hero-sonar text-center" style="background: linear-gradient(135deg, var(--accent-sonar) 0%, #4a2b86 100%); padding: 60px 0 80px;">
+    <div class="container">
+        <span class="badge badge-sonar bg-light text-dark mb-3">VISION COMPUTING</span>
+        <h1 class="display-5 fw-bold"><i class="bi bi-tv-fill"></i> Dashboard Vidéo</h1>
+        <p class="lead opacity-75">Analyse faciale et temps d'antenne visuel</p>
+    </div>
+</header>
+
+<nav class="container nav-sonar">
+    <div class="d-flex justify-content-center gap-3 flex-wrap">
+        <a href="index.html" class="nav-link-sonar"><i class="bi bi-house-fill"></i> Accueil</a>
+        <a href="dashboard-video.html" class="nav-link-sonar active" style="background: var(--accent-sonar);"><i class="bi bi-tv-fill"></i> Vidéo</a>
+        <a href="dashboard-audio.html" class="nav-link-sonar"><i class="bi bi-mic-fill"></i> Audio</a>
+        <a href="rapports.html" class="nav-link-sonar"><i class="bi bi-folder-fill"></i> Rapports</a>
+        <a href="contacts.html" class="nav-link-sonar"><i class="bi bi-telephone-fill"></i> Contact</a>
+    </div>
+</nav>
+
+<main class="container mt-5">
+    <div class="glass-card p-4 text-center mb-5">
+        <div class="d-flex justify-content-center flex-wrap gap-2 mb-4">
+            <div class="filter-pill badge-sonar bg-white text-dark border shadow-sm active" onclick="filterVideo('Tous', this)" style="cursor:pointer; padding: 10px 20px;">Toutes les chaînes</div>
+            <div class="filter-pill badge-sonar bg-white text-muted border shadow-sm" onclick="filterVideo('NC 1ere', this)" style="cursor:pointer; padding: 10px 20px;">NC 1ère</div>
+            <div class="filter-pill badge-sonar bg-white text-muted border shadow-sm" onclick="filterVideo('Caledonia', this)" style="cursor:pointer; padding: 10px 20px;">Caledonia</div>
+        </div>
+        <h2 class="fw-bold" id="displayMediaName">Vue Globale TV</h2>
+        <div class="mx-auto" style="width: 40px; height: 3px; background: var(--secondary-nc);"></div>
+    </div>
+
+    <div class="row g-4 mb-5 text-center">
+        <div class="col-6 col-md-4">
+            <div class="glass-card p-3">
+                <span class="stat-value" id="totalClips">0</span>
+                <small class="text-muted d-block fw-bold uppercase">Émissions Analysées</small>
+            </div>
+        </div>
+        <div class="col-6 col-md-4">
+            <div class="glass-card p-3">
+                <span class="stat-value" id="totalFaceTime">0 min</span>
+                <small class="text-muted d-block fw-bold">Temps Identifié</small>
+            </div>
+        </div>
+        <div class="col-12 col-md-4">
+            <div class="glass-card p-3" style="border-bottom: 4px solid var(--secondary-nc);">
+                <span class="stat-value" id="diversityScore">0%</span>
+                <small class="text-muted d-block fw-bold">Indice de Diversité</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-lg-6">
+            <div class="chart-card shadow-sm">
+                <h3><i class="bi bi-pie-chart-fill me-2"></i>Exposition Visuelle par Camp</h3>
+                <canvas id="videoSpeechChart"></canvas>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="chart-card shadow-sm">
+                <h3><i class="bi bi-cpu-fill me-2"></i>Moniteur de détection IA</h3>
+                <div class="video-monitor">
+                    <div class="scan-line"></div>
+                    <div class="text-center">
+                        <div id="box-ui" style="border: 2px solid #00ff00; width: 80px; height: 80px; margin: 0 auto 15px; position: relative;">
+                            <span style="position: absolute; top: -20px; left: 0; font-size: 10px;">ID_0842</span>
+                        </div>
+                        <p id="ia-status" class="mb-0 small">Analyse faciale active...</p>
+                        <span class="badge bg-success mt-2">Mode : Pluralisme TV</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="chart-card shadow-sm">
+                <h3><i class="bi bi-person-badge-fill me-2"></i>Top 5 Temps d'écran</h3>
+                <canvas id="topFacesChart"></canvas>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="chart-card shadow-sm">
+                <h3><i class="bi bi-shield-check me-2"></i>Respect Loi 1986</h3>
+                <canvas id="complianceChart"></canvas>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="text-center py-4 bg-white border-top text-muted mt-5">
+    <small>&copy; 2025 SONAR NC - Intelligence Artificielle & Monitoring Visuel</small>
+</footer>
+
+<script>
+    let videoCharts = {};
+
+    document.addEventListener('DOMContentLoaded', () => initVideoDashboard('Tous'));
+
+    async function filterVideo(mediaName, element) {
+        document.querySelectorAll('.filter-pill').forEach(btn => btn.classList.remove('active'));
+        if(element) element.classList.add('active');
+        document.getElementById('displayMediaName').innerText = mediaName === 'Tous' ? 'Vue Globale TV' : `Chaîne : ${mediaName}`;
+        initVideoDashboard(mediaName);
+    }
+
+    async function initVideoDashboard(filter) {
+        try {
+            const response = await fetch('resultats_sonar.json');
+            const data = await response.json();
+            const videoData = data.filter(item => {
+                if (item.type !== 'video') return false;
+                if (filter === 'Tous') return true;
+                return getMediaFromFilename(item.filename) === filter;
+            });
+
+            updateVideoCharts(videoData);
+            updateVideoSummary(videoData);
+        } catch (error) { console.error('Erreur:', error); }
+    }
+
+    function getMediaFromFilename(f) {
+        f = f.toLowerCase();
+        return (f.includes('nc1ere') || f.includes('jt')) ? 'NC 1ere' : 'Caledonia';
+    }
+
+    function updateVideoCharts(data) {
+        Object.values(videoCharts).forEach(c => c.destroy());
+
+        const campStats = calculateCampStats(data);
+        const topSpeakers = getTopSpeakers(data);
+
+        // 1. Pie Chart
+        videoCharts.main = new Chart(document.getElementById('videoSpeechChart'), {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(campStats),
+                datasets: [{
+                    data: Object.values(campStats).map(v => Math.round(v/60)),
+                    backgroundColor: ['#dc3545', '#007bff', '#28a745', '#6c757d', '#fd7e14', '#6f42c1']
+                }]
+            },
+            options: { plugins: { legend: { position: 'bottom' } } }
+        });
+
+        // 2. Bar Chart Top Faces
+        videoCharts.topFaces = new Chart(document.getElementById('topFacesChart'), {
+            type: 'bar',
+            data: {
+                labels: topSpeakers.map(s => s.name),
+                datasets: [{
+                    label: 'Minutes',
+                    data: topSpeakers.map(s => Math.round(s.time / 60)),
+                    backgroundColor: topSpeakers.map(s => getCampColor(s.camp))
+                }]
+            }
+        });
+
+        // 3. Compliance Chart
+        const complianceData = calculateCompliance(campStats);
+        videoCharts.compliance = new Chart(document.getElementById('complianceChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Pluralisme', 'Équilibre', 'Diversité'],
+                datasets: [{
+                    label: '% score',
+                    data: complianceData,
+                    backgroundColor: complianceData.map(s => s >= 80 ? '#28a745' : '#ffc107')
+                }]
+            },
+            options: { scales: { y: { max: 100 } } }
+        });
+    }
+
+    function calculateCampStats(data) {
+        const camps = {};
+        data.forEach(item => (item.speakers || []).forEach(s => {
+            const c = s.camp || 'Non défini';
+            camps[c] = (camps[c] || 0) + (s.speech_time || 0);
+        }));
+        return camps;
+    }
+
+    function getTopSpeakers(data) {
+        const spk = [];
+        data.forEach(item => (item.speakers || []).forEach(s => spk.push({ name: s.name, camp: s.camp, time: s.speech_time })));
+        return spk.sort((a,b) => b.time - a.time).slice(0, 5);
+    }
+
+    function getCampColor(camp) {
+        const colors = { 'Indépendantiste': '#dc3545', 'Loyaliste': '#007bff', 'État': '#28a745', 'Neutre': '#6c757d', 'Société Civile': '#fd7e14' };
+        return colors[camp] || '#6f42c1';
+    }
+
+    function calculateCompliance(campStats) {
+        const total = Object.values(campStats).reduce((a, b) => a + b, 0);
+        if (total === 0) return [0, 0, 0];
+        const count = Object.keys(campStats).length;
+        return [Math.min(100, (count/5)*100), 85, Math.min(100, count*20)]; // Scores simulés basés sur la diversité réelle
+    }
+
+    function updateVideoSummary(data) {
+        let time = 0;
+        const camps = new Set();
+        data.forEach(item => (item.speakers || []).forEach(s => {
+            time += s.speech_time;
+            if(s.camp) camps.add(s.camp);
+        }));
+
+        document.getElementById('totalClips').textContent = data.length;
+        document.getElementById('totalFaceTime').textContent = Math.round(time/60) + " min";
+        document.getElementById('diversityScore').textContent = Math.round((camps.size / 5) * 100) + "%";
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+{
+  "id": 1770105038587,
+  "type": "audio",
+  "filename": "2026-02_episode_260203_journal_midi.mp3",
+  "timestamp": "2026-02-03T07:50:38.587Z",
+  "duration": 600,
+  "speakers": [
+    {
+      "name": "Journaliste Animateur",
+      "camp": "Neutre",
+      "speech_time": 400
+    },
+    {
+      "name": "Invité Principal",
+      "camp": "Société Civile",
+      "speech_time": 500
+    }
+  ],
+  "topics": [
+    "Politique",
+    "Social",
+    "Débat",
+    "Interview",
+    "Sport",
+    "Santé",
+    "Environnement",
+    "Éducation"
+  ],
+  "summary": "L'extrait radio calédonien présente un paysage politique très pluraliste, reflétant la complexité institutionnelle et sociale de la Nouvelle-Calédonie, ainsi que ses liens étroits avec la Métropole et...",
+  "analysis_complete": true
+}

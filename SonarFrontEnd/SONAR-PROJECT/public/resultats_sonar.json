@@ -1,0 +1,179 @@
+[
+  {
+    "id": 1767561765600,
+    "type": "video",
+    "filename": "NC_JT_19h30_04012026.mp4",
+    "timestamp": "2026-01-04T21:22:45.600Z",
+    "duration": 0,
+    "speakers": [
+      {
+        "name": "Journaliste Principal",
+        "camp": "Neutre",
+        "speech_time": 400
+      },
+      {
+        "name": "Journaliste Terrain",
+        "camp": "Neutre",
+        "speech_time": 200
+      }
+    ],
+    "topics": [
+      "Politique",
+      "Économie",
+      "Institutionnel",
+      "Sport",
+      "Sécurité"
+    ],
+    "summary": "En tant qu'expert **SONAR**, voici mon analyse détaillée de ce journal télévisé de Nouvelle-Calédonie (édition du dimanche 4 janvier 2026)....",
+    "analysis_complete": true,
+    "media": "NC la 1ère"
+  },
+  {
+    "id": 1767673514235,
+    "type": "audio",
+    "filename": "JR RRB 05012025.mp3",
+    "timestamp": "2026-01-06T04:25:14.235Z",
+    "duration": 600,
+    "speakers": [
+      {
+        "name": "Journaliste Animateur",
+        "camp": "Neutre",
+        "speech_time": 400
+      },
+      {
+        "name": "Invité Principal",
+        "camp": "Société Civile",
+        "speech_time": 500
+      }
+    ],
+    "topics": [
+      "Politique",
+      "Économie",
+      "Social",
+      "Culture",
+      "Santé",
+      "Environnement"
+    ],
+    "summary": "Cet extrait radio calédonien présente un pluralisme politique notable, couvrant des enjeux locaux, nationaux et internationaux, et impliquant une variété d'acteurs....",
+    "analysis_complete": true,
+    "media": "Radio Rythme Bleu"
+  },
+  {
+    "id": 1767673585293,
+    "type": "video",
+    "filename": "JT_NC1ere_05012026.mp4",
+    "timestamp": "2026-01-06T04:26:25.293Z",
+    "duration": 0,
+    "speakers": [
+      {
+        "name": "Journaliste Principal",
+        "camp": "Neutre",
+        "speech_time": 400
+      },
+      {
+        "name": "Journaliste Terrain",
+        "camp": "Neutre",
+        "speech_time": 200
+      }
+    ],
+    "topics": [
+      "Politique",
+      "Économie",
+      "Sport",
+      "Social",
+      "Sécurité"
+    ],
+    "summary": "En tant qu'expert SONAR, voici l'analyse politique et le résumé des temps forts du journal télévisé de Nouvelle-Calédonie (Édition du 05 janvier 2026)....",
+    "analysis_complete": true,
+    "media": "NC la 1ère"
+  },
+  {
+    "id": 1767674574040,
+    "type": "audio",
+    "filename": "JR NRJ 18h 050126.mp3",
+    "timestamp": "2026-01-06T04:42:54.040Z",
+    "duration": 600,
+    "speakers": [
+      {
+        "name": "Journaliste Modérateur",
+        "camp": "Neutre",
+        "speech_time": 300
+      },
+      {
+        "name": "Invité A",
+        "camp": "Loyaliste",
+        "speech_time": 350
+      },
+      {
+        "name": "Invité B",
+        "camp": "Indépendantiste",
+        "speech_time": 350
+      }
+    ],
+    "topics": [
+      "Politique"
+    ],
+    "summary": "Cet extrait radio calédonien offre un aperçu intéressant du pluralisme politique à plusieurs niveaux : local, provincial et dans ses relations avec la France métropolitaine....",
+    "analysis_complete": true,
+    "media": "NRJ Nouvelle-Calédonie"
+  },
+  {
+    "id": 1767674574051,
+    "type": "audio",
+    "filename": "JR_Océane_05012026.mp3",
+    "timestamp": "2026-01-06T04:42:54.051Z",
+    "duration": 600,
+    "speakers": [
+      {
+        "name": "Journaliste Modérateur",
+        "camp": "Neutre",
+        "speech_time": 300
+      },
+      {
+        "name": "Invité A",
+        "camp": "Loyaliste",
+        "speech_time": 350
+      },
+      {
+        "name": "Invité B",
+        "camp": "Indépendantiste",
+        "speech_time": 350
+      }
+    ],
+    "topics": [
+      "Politique",
+      "Économie",
+      "Social",
+      "Débat",
+      "Culture",
+      "Sport",
+      "Environnement"
+    ],
+    "summary": "Cet extrait radio calédonien de \"L'Actu Express\" de Nouméa Post présente une analyse économique et politique avec une tendance éditoriale clairement identifiable, tout en rapportant des faits qui témo...",
+    "analysis_complete": true,
+    "media": "Océane FM"
+  },
+  {
+    "id": 1767674574055,
+    "type": "audio",
+    "filename": "JR_NC1ere_05012026.mp3",
+    "timestamp": "2026-01-06T04:42:54.055Z",
+    "duration": 600,
+    "speakers": [
+      {
+        "name": "Journaliste de la",
+        "camp": "Neutre",
+        "speech_time": 459
+      }
+    ],
+    "topics": [
+      "Politique",
+      "Économie",
+      "Social",
+      "Débat"
+    ],
+    "summary": "Cet extrait radiophonique calédonien offre une illustration riche et multiple du pluralisme politique, se manifestant à travers divers niveaux de gouvernance, acteurs et thématiques....",
+    "analysis_complete": true,
+    "media": "NC la 1ère"
+  }
+]
